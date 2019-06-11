@@ -1,0 +1,27 @@
+
+{
+    "region" : "ap-southeast-2",
+    "profile" : "homestayProfile",
+    "configuration" : "Debug",
+    "tag"           : "identitymanagementapi:latest",
+    "docker-build-working-dir" : "",
+    "cluster"                  : "Identity-Management-Api",
+    "launch-type"              : "FARGATE",
+    "launch-subnets"           : "subnet-6d4d1c24,subnet-99d8fcfe,subnet-340cdd6c",
+    "launch-security-groups"   : "sg-0f0c524e58ad491f7",
+    "assign-public-ip"         : true,
+    "task-definition-name"     : "IdentityManagementApi",
+    "task-cpu"                 : "256",
+    "task-memory"              : "512",
+    "task-definition-task-role" : "arn:aws:iam::590986216309:role/ecsTaskExecutionRole",
+    "task-execution-role"       : "ecsTaskExecutionRole",
+    "container-name"            : "IdentityManagementApi",
+    "container-port-mapping"    : "80:80",
+    "container-environment-variables" : "\"ASPNETCORE_ENVIRONMENT\"=\"Development\"",
+    "skip-image-push"                 : false,
+    "cluster-service"                 : "IdentityManagementApi",
+    "desired-count"                   : 1,
+    "deployment-minimum-healthy-percent" : 50,
+    "deployment-maximum-percent"         : 200,
+    "vstoolkit-deployment-mode"          : "DeployService"
+}

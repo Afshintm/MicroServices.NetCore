@@ -1,0 +1,93 @@
+﻿ This is happening on mac book pro windows 10 and vs2015
+
+Brook way to make SSL certificate for iisExpress with the name of HOSTNAME=AFSHINTEYMO7572
+makecert -r -pe -n "CN=AFSHINTEYMO7572" -b 01/01/2015 -e 01/01/2020 -eku 1.3.6.1.5.5.7.3.1 -sky exchange -a sha256 -len 2048 -ss my -sr localMachine
+
+
+getting thumbPrint and remove spaces:
+ddc7909fb0f98d31524371b39ed66637f3f649fb
+
+generate a random GUID
+// {E558D38B-D551-48B6-B954-BFC82156FB47}
+
+Get IISExpress to serve externally over port 80
+netsh http add urlacl url=http://afshinteymo7572:80/ user=everyone
+
+netsh firewall add portopening TCP 80 IISExpressWeb enable ALL
+
+
+make above SSL certificate for all IP with port 443
+netsh http add sslcert ipport=0.0.0.0:443 appid={E558D38B-D551-48B6-B954-BFC82156FB47} certhash=ddc7909fb0f98d31524371b39ed66637f3f649fb
+
+let the port 443 resolve for everyone
+netsh http add urlacl url=https://afshinteymo7572:443/ user=Everyone
+
+
+make 2 more afshinteymo7572 bindings in iis express configuration
+
+            <site name="IdentityServer.Host.Web" id="2">
+                <application path="/" applicationPool="Clr4IntegratedAppPool">
+                    <virtualDirectory path="/" physicalPath="\\Mac\Home\Repos\Backend\IdentityServer\IdentityServer.Host.Web" />
+                </application>
+                <bindings>
+                    <binding protocol="https" bindingInformation="*:44302:localhost" />
+                    <binding protocol="http" bindingInformation="*:54991:localhost" />
+                    <binding protocol="http" bindingInformation="*:80:afshinteymo7572" />
+                    <binding protocol="https" bindingInformation="*:443:afshinteymo7572" />
+                </bindings>
+            </site>
+
+Reference:
+http://www.hanselman.com/blog/WorkingWithSSLAtDevelopmentTimeIsEasierWithIISExpress.aspx
+
+
+
+
+
+New way:
+
+Brook way to make SSL certificate for iisExpress with the name of HOSTNAME=IdentityServer3.com
+
+makecert -r -pe -n "CN=IdentityServer3.com" -b 01/01/2015 -e 01/01/2036 -eku 1.3.6.1.5.5.7.3.1 -sky exchange -a sha256 -len 2048 -ss my -sr localMachine
+makecert -n "CN=IdentityServerCN" -a sha256 -sv IdentityServer4Auth.pvk -r IdentityServer4Auth.cer
+
+Brook way to make SSL certificate for iisExpress with the name of HOSTNAME=MyIdentityServer3.com
+makecert -r -pe -n "CN=MyIdentityServer3.com" -b 01/01/2015 -e 01/01/2036 -eku 1.3.6.1.5.5.7.3.1 -sky exchange -a sha256 -len 2048 -ss my -sr localMachine
+
+
+getting thumbPrint and remove spaces:
+
+1e717252a25020cd3fd1e5fbf942737804f57dcd
+
+generate a random GUID
+// {90EADA2F-B175-4E53-AE44-D1CDED83ABEF}
+
+
+Get IISExpress to serve externally over port 80
+netsh http add urlacl url=http://IdentityServer3.com:80/ user=everyone
+
+no need ----netsh firewall add portopening TCP 80 IISExpressWeb enable ALL
+
+
+make above SSL certificate for all IP with port 443
+netsh http add sslcert ipport=0.0.0.0:443 appid={90EADA2F-B175-4E53-AE44-D1CDED83ABEF} certhash=1e717252a25020cd3fd1e5fbf942737804f57dcd
+
+let the port 443 resolve for everyone
+netsh http add urlacl url=https://afshinteymo7572:443/ user=Everyone
+netsh http add urlacl url=https://IdentityServer3.com:443/ user=Everyone
+
+no need:
+make 2 more afshinteymo7572 bindings in iis express configuration
+
+            <site name="IdentityServer.Host.Web" id="2">
+                <application path="/" applicationPool="Clr4IntegratedAppPool">
+                    <virtualDirectory path="/" physicalPath="\\Mac\Home\Repos\Backend\IdentityServer\IdentityServer.Host.Web" />
+                </application>
+                <bindings>
+                    <binding protocol="https" bindingInformation="*:44302:localhost" />
+                    <binding protocol="http" bindingInformation="*:54991:localhost" />
+                    <binding protocol="http" bindingInformation="*:80:afshinteymo7572" />
+                    <binding protocol="https" bindingInformation="*:443:afshinteymo7572" />
+                </bindings>
+            </site>
+
